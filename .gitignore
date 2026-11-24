@@ -1,0 +1,11 @@
+# Không bao giờ đưa mật khẩu, token, API key lên GitHub
+.env
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Hệ điều hành
+.DS_Store
+Thumbs.db
