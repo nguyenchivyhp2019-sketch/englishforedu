@@ -643,6 +643,8 @@ details.more[open] summary { margin-bottom: 6px; }
      1. TIỆN ÍCH CHUNG
      ========================================================= */
   const WEB_URL = "https://nguyenchivyhp2019-sketch.github.io/englishforedu/";
+    // Datamuse cache theo URL nên kèm nguồn (origin) của trang để mỗi trang có bản cache riêng, tránh lỗi CORS.
+    const DM = "https://api.datamuse.com/", DM_O = "&o=" + encodeURIComponent(location.host || "local");
   const $ = (sel, root = document) => root.querySelector(sel);
 
   // Tạo phần tử HTML. Chữ luôn được gán bằng textContent nên dữ liệu từ bên ngoài
@@ -1147,7 +1149,7 @@ details.more[open] summary { margin-bottom: 6px; }
 
     // Datamuse: nghĩa tiếng Anh (lấy từ Wiktionary, nghĩa thông dụng xếp trước)
     async function datamuseInfo(word) {
-      const data = await fetchJSON("https://api.datamuse.com/words?md=dpf&max=1&sp=" + encodeURIComponent(word));
+      const data = await fetchJSON(DM + "words?md=dpf&max=1&sp=" + encodeURIComponent(word) + DM_O);
       const hit = Array.isArray(data) && data[0];
       if (!hit || String(hit.word).toLowerCase() !== word.toLowerCase()) return null;
       const defs = (hit.defs || []).map(s => {
@@ -1157,11 +1159,11 @@ details.more[open] summary { margin-bottom: 6px; }
       return defs.length ? { word: hit.word, defs } : null;
     }
     async function datamuseWords(rel, word, max) {
-      const data = await fetchJSON("https://api.datamuse.com/words?" + rel + "=" + encodeURIComponent(word) + "&max=" + max);
+      const data = await fetchJSON(DM + "words?" + rel + "=" + encodeURIComponent(word) + "&max=" + max + DM_O);
       return Array.isArray(data) ? unique(data.map(x => x.word)).filter(w => w !== word) : [];
     }
     async function datamuseSuggest(word) {
-      const data = await fetchJSON("https://api.datamuse.com/sug?max=8&s=" + encodeURIComponent(word));
+      const data = await fetchJSON(DM + "sug?max=8&s=" + encodeURIComponent(word) + DM_O);
       return Array.isArray(data) ? unique(data.map(x => x.word)).filter(w => w !== word && !w.includes(" ")).slice(0, 5) : [];
     }
 
